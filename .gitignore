@@ -1,0 +1,33 @@
+# Keil build output and personal state
+Objects/
+Listings/
+DebugConfig/
+*.uvguix.*
+*.uvoptx
+*.o
+*.obj
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.lnp
+*.build_log.htm
+*.bak
+# Local tools and credentials
+.codex/
+.agents/
+.env
+.env.*
+*.pem
+*.key
+__pycache__/
+Thumbs.db
+.DS_Store
+
+# Additional Keil intermediates
+*.d
+*.crf
+*.dep
+*.htm
+

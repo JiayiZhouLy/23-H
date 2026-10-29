@@ -1,0 +1,6 @@
+1.CubeMX中进行引脚设置（查看对应的芯片手册）
+2.创建工程后在keil中打开，IDE选择arm-keil
+3.generate code，根据需求编写代码
+4.project-build target
+5.option for target,设置debugger和setting
+6.flash download, reset and run
