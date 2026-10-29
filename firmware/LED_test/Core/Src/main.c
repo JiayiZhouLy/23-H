@@ -91,6 +91,13 @@ int main(void)
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
 	uint8_t status_msg[] = "System running\r\n";
+	uint8_t key_msg[] = "KEY0 pressed\r\n";
+
+	uint32_t last_status_time = HAL_GetTick();
+	uint32_t key_change_time = HAL_GetTick();
+
+	GPIO_PinState key_last_raw = GPIO_PIN_RESET;
+	GPIO_PinState key_stable = GPIO_PIN_RESET;
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -100,12 +107,40 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-		 HAL_UART_Transmit(&huart2,
-                    status_msg,
-                    sizeof(status_msg) - 1,
-                    100);
-		HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_9);
-		HAL_Delay(1000);
+		  uint32_t now = HAL_GetTick();
+  GPIO_PinState key_raw = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_4);
+
+
+  if (key_raw != key_last_raw)
+  {
+    key_last_raw = key_raw;
+    key_change_time = now;
+  }
+
+  if ((now - key_change_time >= 20U) &&
+      (key_raw != key_stable))
+  {
+    key_stable = key_raw;
+
+
+    if (key_stable == GPIO_PIN_SET)
+    {
+      HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_9);
+      HAL_UART_Transmit(&huart2,
+                        key_msg,
+                        sizeof(key_msg) - 1,
+                        100);
+    }
+  }
+
+  if (now - last_status_time >= 1000U)
+  {
+    last_status_time = now;
+    HAL_UART_Transmit(&huart2,
+                      status_msg,
+                      sizeof(status_msg) - 1,
+                      100);
+  }
   }
   /* USER CODE END 3 */
 }
@@ -197,11 +232,18 @@ static void MX_GPIO_Init(void)
   /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOE_CLK_ENABLE();
   __HAL_RCC_GPIOF_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOF, GPIO_PIN_9, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : PE4 */
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 
   /*Configure GPIO pin : PF9 */
   GPIO_InitStruct.Pin = GPIO_PIN_9;
