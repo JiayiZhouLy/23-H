@@ -1,6 +1,15 @@
+工程创建和stlink下载：
 1.CubeMX中进行引脚设置（查看对应的芯片手册）
 2.创建工程后在keil中打开，IDE选择arm-keil
 3.generate code，根据需求编写代码
 4.project-build target
 5.option for target,设置debugger和setting
 6.flash download, reset and run
+
+ps.  .ioc为CubeMX工程     
+
+串口通信：
+1.使用ttl转串口烧录（UART通信）
+2.下载一个串口调试助手，我这里使用vofa
+3.下载ch340驱动
+4.可以在调试助手中进行设置，然后可以通过TX和RX进行信号传输。

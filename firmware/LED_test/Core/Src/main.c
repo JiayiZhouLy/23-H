@@ -90,13 +90,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-	uint8_t cmd[] = {
-		0x55, 0xAA, 0x05, 0x23, 0x00, 0x03,
-		0xE8, 0xB0, 0xA6, 0xAA, 0x55
-	};
-
-	HAL_Delay(2000);
-	HAL_UART_Transmit(&huart2, cmd, sizeof(cmd), 1000);
+	uint8_t status_msg[] = "System running\r\n";
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,6 +100,12 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+		 HAL_UART_Transmit(&huart2,
+                    status_msg,
+                    sizeof(status_msg) - 1,
+                    100);
+		HAL_GPIO_TogglePin(GPIOF, GPIO_PIN_9);
+		HAL_Delay(1000);
   }
   /* USER CODE END 3 */
 }
